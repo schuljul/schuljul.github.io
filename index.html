@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Dracula's Nurse</title>
+    <link rel="icon" href="./images/water.png" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .main_box {
+        background-image: url(./images/image.png);
+        min-width: 768px;
+        height: 651px;
+        position: relative;
+        margin-right: 20px;
+      }
+
+      .mb_box {
+        width: 260px;
+        border-top: 1px solid #b26843;
+        border-left: 1px solid #ffd88d;
+        border-right: none;
+        border-bottom: none;
+        background: linear-gradient(to bottom, #000020 16%, #0000b2 30%);
+        transition: 0.4s;
+        position: absolute;
+        right: 0px;
+        bottom: 0px;
+      }
+
+      .mb_box:hover {
+        transition: 0.4s;
+        box-shadow: 0px 0px 4px 4px #78f078;
+        border-bottom: 1px solid #b26843;
+        border-right: 1px solid #ffd88d;
+        padding-bottom: 8px;
+        padding-right: 8px;
+      }
+
+      .box_button {
+        min-height: 70px;
+        position: relative;
+      }
+
+      .heading {
+        font-size: 28pt;
+        text-shadow: 0px 0px 10px red;
+        background-color: #0000b2;
+        display: inline;
+        padding: 8px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <a href="./index.html"><img src="./images/logo.png" alt="" /></a>
+      <img src="./images/copy.png" alt="" class="copyright" />
+    </div>
+
+    <div class="bar">
+      <div class="flex_row">
+        <a class="bar_button_a" href="./index.html"
+          ><div class="bar_link">HOME</div></a
+        >
+        <a class="bar_button" href="./about.html"
+          ><div class="bar_link">ABOUT</div></a
+        >
+        <a class="bar_button" href="#"><div class="bar_link">SERVICE</div></a>
+        <a class="bar_button" href="covid.html"
+          ><div class="bar_link">COVID-19</div></a
+        >
+        <a class="bar_button" href="shop.html"
+          ><div class="bar_link">SHOP</div></a
+        >
+        <a class="bar_button" href="#"><div class="bar_link">SEARCH</div></a>
+        <a class="bar_button" href="./contact.html"
+          ><div class="bar_link">CONTACT</div></a
+        >
+        <a class="bar_button" href="privacy.html"
+          ><div class="bar_link">PRIVACY POLICY</div></a
+        >
+        <a class="bar_button" href="notice.html"
+          ><div class="bar_link">NOTICE</div></a
+        >
+      </div>
+    </div>
+
+    <!-------------------main page--------------------->
+    <div class="container" style="min-width: 1070px">
+      <div class="flex_row">
+        <div class="main_box">
+          <div style="line-height: 28pt; padding-top: 8px">
+            <i class="heading"> We equip you! </i>
+          </div>
+          <img
+            src="./images/richter.png"
+            alt=""
+            style="position: absolute; bottom: 0px; left: 50px"
+          />
+          <a href="covid.html"
+            ><div class="mb_box bottom_right">
+              <div class="box_cont">
+                <img src="./images/covid.png" alt="" /><br /><br />
+                <div class="p">
+                  A new pest is infesting the continent of europe! This poses a
+                  great obstacle for all the vampire hunters, whose
+                  vampire-hunting activities are severely cut short due to the
+                  travel restrictions. <br />
+                  We can help if you happen to find yourself in such a
+                  situation.
+                </div>
+              </div>
+            </div></a
+          >
+        </div>
+
+        <div class="flex_column">
+          <div class="box">
+            <div class="box_cont">
+              <div class="p">offers</div>
+              <a href="">
+                <div class="box_button">
+                  <div class="p">
+                    <div>Our Health Tips</div>
+                    <img src="./images/apple.png" alt="" class="bottom_right" />
+                  </div>
+                </div>
+              </a>
+              <a href="shop.html">
+                <div class="box_button">
+                  <div class="p"><div>Masks</div></div>
+                  <img
+                    src="./images/ffp2.png"
+                    alt=""
+                    class="bottom_right"
+                  /></div
+              ></a>
+              <a href="shop.html#curse">
+                <div class="box_button">
+                  <div class="p">
+                    <div>Curse Lifting</div>
+                    <img src="./images/water.png" alt="" class="bottom_right" />
+                  </div></div
+              ></a>
+              <a href="formular.html">
+                <div class="box_button">
+                  <div class="p">
+                    <div>Get Covid-Test!</div>
+                  </div>
+                  <img src="./images/test.png" alt="" class="bottom_right" />
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="box_cont">
+              <div class="p">Opening times</div>
+              <br />
+              monday-friday:
+              <div style="float: right">8pm - 6am</div>
+              <br /><br />
+              saturday:
+              <div style="float: right">10pm - 4am</div>
+              <br /><br />
+              sunday:
+              <div style="float: right">0pm - 0am</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
