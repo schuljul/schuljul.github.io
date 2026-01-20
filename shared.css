@@ -1,0 +1,136 @@
+#id-card {
+  width: 720px;
+  height: 500px;
+  border: 1px solid #fff;
+  background: linear-gradient(to top, #000000, #686868);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16pt;
+  border-radius: 12px;
+  border: 8px ridge #fff;
+  user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#id-image-frame {
+  width: 50%;
+  max-width: 50%;
+  height: 50%;
+  max-height: 50%;
+  margin: 6%;
+  margin-bottom: 0;
+  margin-top: 3%;
+}
+
+#id-image-frame.square-avatar img {
+  object-fit: cover;
+}
+
+#id-header {
+  display: flex;
+  align-items: center;
+  margin-left: 6%;
+  margin-top: 3%;
+  font-weight: 900;
+}
+
+#id-title {
+  margin-right: auto;
+    text-align: left;
+    margin-left: 3%;
+}
+
+#id-name {
+  text-align: left;
+}
+
+#id-score {
+  margin-right: 6%;
+  text-align: right;
+}
+
+#id-stats {
+  margin: 6%;
+  margin-top: 3%;
+  margin-left: 0;
+  max-height: 50%;
+}
+
+.stat {
+  font-weight: 500;
+  font-size: 10pt;
+  font-family: MS Gothic;
+  opacity: 0.5;
+}
+
+.stat_value {
+  font-size: 16pt;
+  line-height: 20pt;
+  opacity: 1;
+  color: #fff;
+}
+
+.flex_row {
+  display: flex;
+  flex-direction: row;
+}
+
+.id-flag {
+  width: 10%;
+}
+
+#id-serial {
+  margin: 10px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-align: right;
+  opacity: 0.65;
+}
+
+     /* ============================
+   ID CARD — 3D TILT IMAGE
+   ============================ */
+
+     .tilt-wrapper {
+               perspective: 900px;
+     }
+
+     .tilt-card {
+               width: 100%;
+               aspect-ratio: 1 / 1;
+               transform-style: preserve-3d;
+               transition: transform 0.15s ease-out;
+               overflow: hidden;
+     }
+
+     .tilt-img {
+               position: absolute;
+               inset: 0;
+               width: 100%;
+               height: 100%;
+               object-fit: cover;
+               transition: opacity 0.12s linear;
+     }
+
+     .img-b {
+               opacity: 0;
+               pointer-events: none;
+     }
+
+     /* ============================
+   ID CARD — FULL CARD TILT
+   ============================ */
+
+     .id-card-wrapper {
+               perspective: 1100px;
+     }
+
+     .id-card-tilt {
+               transform-style: preserve-3d;
+               transition: transform 0.15s ease-out;
+               will-change: transform;
+     }
+
+     .id-card-tilt>* {
+               transform: translateZ(1px);
+     }
