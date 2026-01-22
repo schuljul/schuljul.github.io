@@ -43,6 +43,11 @@
       let lastMouseX = 0;
       let lastMouseY = 0;
 
+      const isTouch =
+  "ontouchstart" in window ||
+  navigator.maxTouchPoints > 0;
+
+  if (!isTouch) {
       document.addEventListener("mousemove", (e) => {
         lastMouseX = e.clientX;
         lastMouseY = e.clientY;
@@ -83,6 +88,7 @@
         imgB.style.opacity = fade;
         imgA.style.opacity = 1 - fade;
       });
+    }
 
       document.addEventListener("click", () => {
         enlarged = !enlarged;

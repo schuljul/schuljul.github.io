@@ -1,7 +1,7 @@
 (() => {
 
 
-const typeSpeed = 100;
+const typeSpeed = 1;
 const ALT_IMAGE_MAP = {
   "S3_01A.jpg": "./assets/images/Stage_3/S3_01B.jpg",
   "S3_02A.jpg": "./assets/images/Stage_3/S3_02B.jpg",
@@ -155,15 +155,15 @@ let dialogLines = [
   {type: "input", text: "WHAT ARE YOU TRYING TO GET AWAY FROM?", key: "escape" },
   {
     type: "choice",
-    text: "ARE YOU IN POSESSION OF CITIZENSHIP?",
-    clickAdvance: true,
-    choices: [{ label: "Yes" }, { label: "No" }]
-  },
-  {
-    type: "choice",
     text: "STATE YOUR GENDER.",
     clickAdvance: true,
     choices: [{ label: "Male" }, { label: "Female" }]
+  },
+  {
+    type: "choice",
+    text: "ARE YOU IN POSESSION OF CITIZENSHIP?",
+    clickAdvance: true,
+    choices: [{ label: "Yes" }, { label: "No" }]
   },
    {
     type: "choice",
@@ -285,6 +285,21 @@ let dialogLines = [
   },
   {
     type: "choice",
+    text: "YOU WILL PURCHASE.",
+    choices: [{ label: "No." }]
+  },
+  {
+    type: "choice",
+    text: "YOU WILL LIKE.",
+    choices: [{ label: "No." }]
+  },
+  {
+    type: "choice",
+    text: "YOU WILL DISLIKE.",
+    choices: [{ label: "No." }]
+  },
+  {
+    type: "choice",
     hoverSwap: { Yes: "Yes.", No: "Yes." },
     text: "YOU WILL ENLIST",
     choices: [{ label: "No" }]
@@ -401,7 +416,7 @@ this.typeWriter(line.text, () => {
     let correctAnswer = null;
 
 if (line.randomCorrect) {
-  correctAnswer = Math.random() < 0.5 ? "Heads" : "Tails";
+  correctAnswer = Math.random() < 0.5 ? "HEADS" : "Tails";
 }
 
 
@@ -811,6 +826,26 @@ document
       effectEl.style.display = input.checked ? "block" : "none";
     });
   });
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      document.querySelectorAll(".scene").forEach((s) =>
+        s.classList.remove("active")
+      );
+      document.getElementById("intro-scene").classList.add("active");
+  
+      DialogSystem.index = 0;
+      DialogSystem.typing = false;
+      DialogSystem.typingCancel = false;
+      DialogSystem.waitingForChoice = false;
+  
+      nextBtn.classList.add("hidden");
+      doneBtn.classList.add("hidden");
+      choiceContainer.classList.add("hidden");
+      inputContainer.classList.add("hidden");
+    }
+  });
+  
 
 
 })();
