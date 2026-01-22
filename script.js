@@ -593,13 +593,25 @@ const hymnContinueBtn = document.getElementById("S2-proceed-btn");
 
 if (hymnAudio && hymnPlayBtn && hymnContinueBtn) {
   hymnPlayBtn.onclick = () => {
-  hymnPlayBtn.classList.add("hidden");
-  hymnAudio.play();
-  hymnAudio.onpause = () => montage.stop();
-  hymnAudio.onplay = () => montage.resume();
-  montage.start();
-    
-};
+    hymnPlayBtn.classList.add("hidden");
+  
+    // Wait for audio to be ready
+    if (hymnAudio.readyState >= 2) { // HAVE_CURRENT_DATA
+      hymnAudio.play();
+      hymnAudio.onpause = () => montage.stop();
+      hymnAudio.onplay = () => montage.resume();
+      montage.start();
+    } else {
+      hymnAudio.addEventListener("canplaythrough", function startOnce() {
+        hymnAudio.removeEventListener("canplaythrough", startOnce);
+        hymnAudio.play();
+        hymnAudio.onpause = () => montage.stop();
+        hymnAudio.onplay = () => montage.resume();
+        montage.start();
+      });
+    }
+  };
+  
 
 }
 
