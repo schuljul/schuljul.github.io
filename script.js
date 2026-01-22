@@ -1,7 +1,7 @@
 (() => {
 
-
-const typeSpeed = 1;
+const DEBUG = false; 
+const typeSpeed = 100;
 const ALT_IMAGE_MAP = {
   "S3_01A.jpg": "./assets/images/Stage_3/S3_01B.jpg",
   "S3_02A.jpg": "./assets/images/Stage_3/S3_02B.jpg",
@@ -21,6 +21,12 @@ let interviewComplete = false;
 let sceneSwitching = false;
 const SHOW_DEBUG_TIMER = false;
 
+
+const debugContainer = document.getElementById("debug-menu");
+
+if (debugContainer) {
+  debugContainer.style.display = DEBUG ? "block" : "none";
+}
 
 
 // ============================
@@ -171,14 +177,6 @@ let dialogLines = [
     clickAdvance: true,
     choices: [{ label: "Yes" }, { label: "No" }]
   },
-  {
-    type: "choice",
-    text: "DO YOU BELIEVE IN HIM?",
-    clickAdvance: true,
-    hoverSwap: { Yes: "He can't see me", No: "I can't see him" },
-    choices: [{ label: "Yes" }, { label: "No" }]
-  },
-
   {
     type: "choice",
     text: "SELECT YOUR DIFFICULTY.",
@@ -568,7 +566,7 @@ hymnSceneActive = nextId === "S2-scene";
     bus.classList.remove("hidden");
     card.style.display = "block";
     enableTilt();
-  }, 1000); // Load Time: 1000000 = ~16 min
+  }, 500000); // Load Time: 1000000 = ~16 min
 }
 
 });

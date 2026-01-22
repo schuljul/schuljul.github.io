@@ -11,7 +11,7 @@
          --gc-outer: 840px; /* Containergröße Richtwert */
       }
 
-      @media (max-width: 900px), (max-height: 790px) {
+      @media (max-width: 900px), (max-height: 750px) {
         :root {
         --gc-outer: 640px; 
         }
@@ -379,6 +379,8 @@
       #image-grid .S3_img {
         width: 100%;
         height: 100%;
+        max-width: calc(var(--gc-outer) / 14 * 4);
+        max-height: calc(var(--gc-outer) / 14 * 4);
         object-fit: cover;
         cursor: pointer;
         border: 1px solid #000;
@@ -882,3 +884,5 @@ If the applicant is in agreement with the above conditions they may start the pr
     <script src="script.js"></script>
   </body>
 </html>
+
+
