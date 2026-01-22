@@ -1,15 +1,14 @@
 #id-card {
   width: 720px;
   height: 500px;
-  border: 1px solid #fff;
-  background: linear-gradient(to top, #000000, #686868);
-  font-family: 'Courier New', Courier, monospace;
+  background: linear-gradient(to top, #000000, #3b3b3b, #000000);
+  font-family: "Courier New", Courier, monospace;
   font-size: 16pt;
-  border-radius: 12px;
-  border: 8px ridge #fff;
+  border-radius: 20px;
+  border: 12px ridge #bdbdbd;
   user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 #id-image-frame {
@@ -36,8 +35,8 @@
 
 #id-title {
   margin-right: auto;
-    text-align: left;
-    margin-left: 3%;
+  text-align: left;
+  margin-left: 3%;
 }
 
 #id-name {
@@ -87,50 +86,50 @@
   opacity: 0.65;
 }
 
-     /* ============================
+/* ============================
    ID CARD — 3D TILT IMAGE
    ============================ */
 
-     .tilt-wrapper {
-               perspective: 900px;
-     }
+.tilt-wrapper {
+  perspective: 900px;
+}
 
-     .tilt-card {
-               width: 100%;
-               aspect-ratio: 1 / 1;
-               transform-style: preserve-3d;
-               transition: transform 0.15s ease-out;
-               overflow: hidden;
-     }
+.tilt-card {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+  overflow: hidden;
+}
 
-     .tilt-img {
-               position: absolute;
-               inset: 0;
-               width: 100%;
-               height: 100%;
-               object-fit: cover;
-               transition: opacity 0.12s linear;
-     }
+.tilt-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.12s linear;
+}
 
-     .img-b {
-               opacity: 0;
-               pointer-events: none;
-     }
+.img-b {
+  opacity: 0;
+  pointer-events: none;
+}
 
-     /* ============================
+/* ============================
    ID CARD — FULL CARD TILT
    ============================ */
 
-     .id-card-wrapper {
-               perspective: 1100px;
-     }
+.id-card-wrapper {
+  perspective: 1100px;
+}
 
-     .id-card-tilt {
-               transform-style: preserve-3d;
-               transition: transform 0.15s ease-out;
-               will-change: transform;
-     }
+.id-card-tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
 
-     .id-card-tilt>* {
-               transform: translateZ(1px);
-     }
+.id-card-tilt > * {
+  transform: translateZ(1px);
+}

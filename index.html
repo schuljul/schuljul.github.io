@@ -4,29 +4,37 @@
     <meta charset="utf-8" />
     <title>STATE MACHINE</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <link rel="icon" href="./assets/images/vrt-icon.png" type="image/png">
     <link rel="stylesheet" href="shared.css" />
     <style>
       :root {
          --gc-outer: 840px; /* Containergröße Richtwert */
       }
 
-      @media (max-width: 900px) {
+      @media (max-width: 900px), (max-height: 790px) {
         :root {
-        --gc-outer: 704px; /* 704 / 8 = 88 */
+        --gc-outer: 640px; 
+        }
+
+        body {
+          font-size: 10pt;
         }
       }
 
       @media (max-width: 600px) {
         :root {
-        --gc-outer: 448px; /* 448 / 8 = 56 */
+        --gc-outer: 320px;
+        }
+
+        body {
+          font-size: 7pt;
         }
       }  
 
       body {
         margin: 0;
         overflow: hidden;
-        font-family: "Courier New", Courier, monospace;
+        font-family: Consolas, "SF Mono", Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
         color: #fff;
         background: radial-gradient(circle, #ffffff, #000);
         background-attachment: fixed;
@@ -164,9 +172,9 @@
       }
 
       .btn {
-        font-family: "Courier New", Courier, monospace;
+        font-family: inherit;
         color: #fff;
-        font-size: 12pt;
+        font-size: inherit;
         background: #000;
         border: 1px solid #fff;
         width: 100%;
@@ -174,8 +182,8 @@
       }
 
       #final-btn:hover {
-        font-family: "Courier New", Courier, monospace;
-        color: #fff;
+        font-family: inherit;
+        color: #000;
       }
 
       #final {
@@ -228,7 +236,7 @@
         border: 1px solid #000000;
         color: #000000;
         font-size: 12pt;
-        font-family: "Courier New", Courier, monospace;
+        font-family: inherit;
         width: calc(var(--gc-outer) / 14 * 12);
       }
 
@@ -303,8 +311,8 @@
       }
        
       #hymn-montage.shrunk {
-        width: 180px;
-        height: 180px;
+        width: calc(var(--gc-outer) / 14 * 4);;
+        height: calc(var(--gc-outer) / 14 * 4);;
         top: auto;
         left: auto;
         cursor: pointer;
@@ -410,27 +418,26 @@
         transform-origin: top left;
       }
 
-#loading-spinner {
-  position: relative;
-  width: 100%;      /* length of the track */
-  height: 16px;      /* height of the track */
-  margin: auto;
-  overflow: hidden;
-}
+      #loading-spinner {
+        position: relative;
+        width: 100%;    
+        height: 16px;     
+        margin: auto;
+        overflow: hidden;
+      }
 
-#loader-bar {
-  position: absolute;
-  width: 20%;       /* length of the moving block */
-  height: 100%;
-  background: #fff;  /* moving bar color */
-  animation: slide 1s ease-in-out infinite alternate;
-}
+      #loader-bar {
+        position: absolute;
+        width: 20%;      
+        height: 100%;
+        background: #fff; 
+        animation: slide 1s ease-in-out infinite alternate;
+      }
 
-@keyframes slide {
-  0% { left: 0; }
-  100% { left: calc(100% - 20%); } /* ensures it stays inside the track */
-}
-
+      @keyframes slide {
+        0% { left: 0; }
+        100% { left: calc(100% - 20%); } 
+      }
 
       #final-scene .id-card-wrapper {
         display: none;
@@ -499,7 +506,7 @@
         top: 10px;
         right: 10px;
         background: #000000b3;
-        font-size: 12px;
+        font-size: inherit;
       }
 
       #stage-nav {
@@ -516,6 +523,7 @@
   </head>
 
   <body>
+  
     <div id="debug-menu">
       <div id="stage-nav">
         <button data-next="S1-trans-scene" class="stage btn">pre- <br> Stage 1</button>
@@ -797,13 +805,14 @@ If the applicant is in agreement with the above conditions they may start the pr
             <div class="id-card-wrapper">
                <div id="id-card">
             <div id="id-header">
-              <img src="./assets/images/Sato-Flag.jpg" alt="" class="id-flag" />
+              <img src="./assets/images/vrt-flag.jpg" alt="" class="id-flag" />
               <span id="id-title"
                 >ALIEN PROCESSING DEPARTMENT <br />
                 STATE OF VERIATNIA
               </span>
               <div id="id-score">
-                <span id="score-title"></span> <span id="score-value"></span>
+                <span id="score-title">SCORE</span><br />
+                <span id="score-value"></span>
               </div>
             </div>
             <div class="flex_row">
@@ -819,27 +828,29 @@ If the applicant is in agreement with the above conditions they may start the pr
                 </div>
               </div>
               <div id="id-stats">
-                <div>
-                  <span id="id-name">@</span>
-                </div>
+                <div><span>@</span><span id="id-name"></span></div>
+                <br />
                 <div>
                   <span class="stat">CONDEMNED BY: </span><br /><span
                     id="stat-born"
                     class="stat_value"
                   ></span>
                 </div>
-                <div>
-                  <span class="stat">DEFINED BY: </span><br /><span
-                    id="stat-fled"
-                    class="stat_value"
-                  ></span>
-                </div>
+                <br />
                 <div>
                   <span class="stat">TIME OF CONDEMNATION: </span><br /><span
                     id="stat-date"
                     class="stat_value"
                   ></span>
                 </div>
+                <br />
+                <div>
+                  <span class="stat">DEFINED BY: </span><br /><span
+                    id="stat-fled"
+                    class="stat_value"
+                  ></span>
+                </div>
+                <br />
                 <div>
                   <span class="stat">HEIGHT: </span><br /><span
                     id="stat-height"
@@ -852,7 +863,7 @@ If the applicant is in agreement with the above conditions they may start the pr
               </div> <div id="final" class="hidden">
               You may proceed entering State of Veritania. <br>
               Right outside the perimeter you will find yourself at a bus station. Take a bus to a nearest municipality, to initiate further settlement proceedings.<br>  
- <button id="final-btn" class="btn" onclick="window.location.href='./bus.html'"> BUS</button>
+ <button id="final-btn" class="btn" onclick="window.location.href='./bus.html'">ST-0000</button>
           </div>
             
             </div>
@@ -860,13 +871,11 @@ If the applicant is in agreement with the above conditions they may start the pr
 
           <section id="error-scene" class="scene hidden">
   <div class="center">
-    PROCESSING FAILURE
-    <button onclick="location.reload()" class="btn">TRY AGAIN</button>
+    PROCESSING FAILURE: wrong answer
+    <button onclick="location.reload()" class="btn">RELOAD</button>
   </div>
 </section>
-
-
-          
+        
         </div>
       </div>
 

@@ -1,27 +1,31 @@
 (() => {
 
 
-// ========================
-// constants
-// ========================
-const TRANS_MS = 1000;
-const typeSpeed = 48;
-
+const typeSpeed = 100;
 const ALT_IMAGE_MAP = {
-  "./assets/images/Stage_3/S3_01A.jpg": "./assets/images/Stage_3/S3_01B.jpg",
-  "./assets/images/Stage_3/S3_02A.jpg": "./assets/images/Stage_3/S3_02B.jpg",
-  "./assets/images/Stage_3/S3_03A.jpg": "./assets/images/Stage_3/S3_03B.jpg",
-  "./assets/images/Stage_3/S3_04A.jpg": "./assets/images/Stage_3/S3_04B.jpg",
-  "./assets/images/Stage_3/S3_05A.jpg": "./assets/images/Stage_3/S3_05B.jpg",
-  "./assets/images/Stage_3/S3_06A.jpg": "./assets/images/Stage_3/S3_06B.jpg",
-  "./assets/images/Stage_3/S3_07A.jpg": "./assets/images/Stage_3/S3_07B.png",
-  "./assets/images/Stage_3/S3_08A.jpg": "./assets/images/Stage_3/S3_08B.jpg",
-  "./assets/images/Stage_3/S3_09A.jpg": "./assets/images/Stage_3/S3_09B.jpg",
+  "S3_01A.jpg": "./assets/images/Stage_3/S3_01B.jpg",
+  "S3_02A.jpg": "./assets/images/Stage_3/S3_02B.jpg",
+  "S3_03A.jpg": "./assets/images/Stage_3/S3_03B.jpg",
+  "S3_04A.jpg": "./assets/images/Stage_3/S3_04B.jpg",
+  "S3_05A.jpg": "./assets/images/Stage_3/S3_05B.jpg",
+  "S3_06A.jpg": "./assets/images/Stage_3/S3_06B.jpg",
+  "S3_07A.jpg": "./assets/images/Stage_3/S3_07B.png",
+  "S3_08A.jpg": "./assets/images/Stage_3/S3_08B.jpg",
+  "S3_09A.jpg": "./assets/images/Stage_3/S3_09B.jpg"
 };
 
-// ========================
-// SCORE SYSTEM (OBJECT)
-// ========================
+let activeScene = null;
+let idCardActive = false;
+let hymnSceneActive = false;
+let interviewComplete = false;
+let sceneSwitching = false;
+const SHOW_DEBUG_TIMER = false;
+
+
+
+// ============================
+// SCORE SYSTEM
+// ============================
 const ScoreSystem = {
   totalScore: 0,
   questionTimerStart: null,
@@ -29,40 +33,51 @@ const ScoreSystem = {
   debugTimerEl: null,
 
   init() {
-    this.debugTimerEl = document.createElement("div");
-    this.debugTimerEl.style.position = "absolute";
-    this.debugTimerEl.style.top = "8px";
-    this.debugTimerEl.style.right = "12px";
-    this.debugTimerEl.style.fontSize = "14px";
-    this.debugTimerEl.style.opacity = "0.7";
-    this.debugTimerEl.style.zIndex = "999";
-    this.debugTimerEl.textContent = "⏱ 0.0s";
-    document.body.appendChild(this.debugTimerEl);
-  },
+  if (!SHOW_DEBUG_TIMER) return;
+
+  this.debugTimerEl = document.createElement("div");
+  this.debugTimerEl.style.position = "absolute";
+  this.debugTimerEl.style.top = "8px";
+  this.debugTimerEl.style.right = "12px";
+  this.debugTimerEl.style.fontSize = "14px";
+  this.debugTimerEl.style.opacity = "0.7";
+  this.debugTimerEl.style.zIndex = "999";
+  this.debugTimerEl.textContent = "0.0s";
+  document.body.appendChild(this.debugTimerEl);
+},
+
 
   startTimer() {
-    this.questionTimerStart = performance.now();
-    clearInterval(this.timerInterval);
-    this.timerInterval = setInterval(() => {
-      const t = performance.now() - this.questionTimerStart;
-      this.debugTimerEl.textContent = `⏱ ${(t / 1000).toFixed(1)}s`;
-    }, 100);
-  },
+  this.questionTimerStart = performance.now();
+  clearInterval(this.timerInterval);
+
+  if (!SHOW_DEBUG_TIMER) return;
+
+  this.timerInterval = setInterval(() => {
+    const t = performance.now() - this.questionTimerStart;
+    this.debugTimerEl.textContent = `${(t / 1000).toFixed(1)}s`;
+  }, 100);
+},
+
 
   stopTimer() {
-    if (!this.questionTimerStart) return 0;
-    const t = performance.now() - this.questionTimerStart;
-    clearInterval(this.timerInterval);
-    this.questionTimerStart = null;
-    this.debugTimerEl.textContent = "⏱ 0.0s";
-    return Math.round(t);
+  if (!this.questionTimerStart) return 0;
+  const t = performance.now() - this.questionTimerStart;
+  clearInterval(this.timerInterval);
+  this.questionTimerStart = null;
+
+  if (SHOW_DEBUG_TIMER) {
+    this.debugTimerEl.textContent = "0.0s";
   }
+
+  return Math.round(t);
+}
 };
 
 
-// ==========================
-// LOCAL STORAGE (OBJECT)
-// ==========================
+// ===============================
+// LOCAL STORAGE
+// ===============================
 const Storage = {
   KEY: "immigrationResult",
   save(data) {
@@ -74,35 +89,44 @@ const Storage = {
   }
 };
 
-// (Dialog system code remains unchanged)
 
-
-// ==========================
-// SCENE MANAGER (OBJECT)
-// ==========================
+// ===================================
+// SCENE MANAGER 
+// ===================================
 const SceneManager = {
   switch(nextId) {
+    if (sceneSwitching) return Promise.resolve();
+    sceneSwitching = true;
+  
     return new Promise((resolve) => {
       const current = document.querySelector(".scene.active");
       const next = document.getElementById(nextId);
-      if (!next) return resolve();
-
+      if (!next) {
+        sceneSwitching = false;
+        return resolve();
+      }
+  
       if (current) {
         current.classList.remove("active");
         current.classList.add("hidden");
       }
-
+  
       next.classList.remove("hidden");
       next.classList.add("active");
-      resolve();
+  
+      requestAnimationFrame(() => {
+        sceneSwitching = false;
+        resolve();
+      });
     });
   }
+  
 };
 
 
-// ==========================
-// Dialog system (UNCHANGED)
-// ==========================
+// =================
+// STAGE1
+// =================
 const dialogTextEl = document.getElementById("dialog-text");
 const nextBtn = document.getElementById("next-btn");
 const doneBtn = document.getElementById("dialog-done-btn");
@@ -120,148 +144,165 @@ const interviewData = {
   escape: ""
 };
 
-const PERSIST_DIALOG_HISTORY = true; // ← set to false to restore old behavior
+const PERSIST_DIALOG_HISTORY = true; 
 
 let dialogLines = [
   {type: "text", text: "" },
-  {type: "input", text: "What is your name?", key: "name" },
-  {type: "input", text: "Where are you from?", key: "birthplace" },
-  {type: "input", text: "When were you born?", key: "birthdate" },
-  {type: "input", text: "Height?", key: "height" },
-  {type: "input", text: "What are you trying to get away from?", key: "escape" },
+  {type: "input", text: "STATE YOUR NAME.", key: "name" },
+  {type: "input", text: "WHERE ARE YOU FROM?", key: "birthplace" },
+  {type: "input", text: "WHEN WERE YOU BORN?", key: "birthdate" },
+  {type: "input", text: "STATE YOUR HEIGHT.", key: "height" },
+  {type: "input", text: "WHAT ARE YOU TRYING TO GET AWAY FROM?", key: "escape" },
   {
     type: "choice",
-    text: "Are you in possession of citizenship?",
+    text: "ARE YOU IN POSESSION OF CITIZENSHIP?",
     clickAdvance: true,
     choices: [{ label: "Yes" }, { label: "No" }]
   },
   {
     type: "choice",
-    text: "what is your gender?",
+    text: "STATE YOUR GENDER.",
     clickAdvance: true,
     choices: [{ label: "Male" }, { label: "Female" }]
   },
-  {
+   {
     type: "choice",
-    text: "What do you place your faith in him?",
-    hoverSwap: { Yes: "he can't see me", No: "I can't see him" },
+    text: "ARE YOU VIOLENT?",
+    clickAdvance: true,
     choices: [{ label: "Yes" }, { label: "No" }]
   },
   {
     type: "choice",
-    text: "Are you violent?",
+    text: "DO YOU BELIEVE IN HIM?",
+    clickAdvance: true,
+    hoverSwap: { Yes: "He can't see me", No: "I can't see him" },
     choices: [{ label: "Yes" }, { label: "No" }]
   },
+
   {
     type: "choice",
-    text: "What is your preferred difficulty setting?",
+    text: "SELECT YOUR DIFFICULTY.",
+    clickAdvance: true,
     choices: [{ label: "White" }, { label: "Brown" }, { label: "Black" }]
   },
   {
     type: "choice",
-    text: "Are you alone?",
+    text: "ARE YOU ALONE?",
+    clickAdvance: true,
     hoverSwap: { Yes: "Yes, I am.", No: "No, we are." },
     choices: [{ label: "Yes" }, { label: "No" }]
   },
     {
     type: "choice",
-    text: "What is democracy?",
-    choices: [{ label: "Tyranny of the Majority." }, { label: "Tyranny of the minority." }]
+    text: "WHAT IS DEMOCRACY?",
+    clickAdvance: true,
+    choices: [{ label: "Tyranny of the Majority" }, { label: "Tyranny of the minority" }]
   },
   {
     type: "choice",
-    text: "What is totalitarianism?",
-    choices: [{ label: "Assumption of totality." }, { label: "Rejection of exclusion." }]
+    text: "WHAT IS TOTALITARIANISM?",
+    clickAdvance: true,
+    choices: [{ label: "Absolute totality" }, { label: "Rejection of exclusion" }]
   },
   {
     type: "choice",
-    text: "What is the purpose of state machine?",
+    text: "WHAT IS THE PURPOSE OF STATE MACHINE?",
+    clickAdvance: true,
     choices: [{ label: "Process" }, { label: "Suspension" }]
   },
   {
     type: "choice",
-    text: "Are you excited for or looking forward to?",
+    text: "ARE YOU EXCITED OR LOOKING FORWARD TO?",
+    clickAdvance: true,
     hoverSwap: { Yes: "No", No: "No" },
     choices: [{ label: "Yes" }, { label: "No" }]
   },
   {
     type: "choice",
-    text: "Do you recognize yourself as a subject?",
+    text: "DO YOU RECOGNIZE YOURSELF AS A SUBJECT?",
+    clickAdvance: true,
     choices: [{ label: "Yes" }, { label: "No" }]
   },
   {
     type: "choice",
-    text: "What makes a good Veritanian citizen?",
+    text: "WHAT MAKES A GOOD VERITANIAN CITIZEN?",
+    clickAdvance: true,
     choices: [{ label: "Their non-existence" }, { label: "Their over-existence" }]
   },
   {
     type: "choice",
-    text: "What is a the duty of every citizen of Veritania?",
+    text: "WHAT IS THE PRIMARY DUTY OF EVERY CITIZEN OF VERITANIA?",
+    clickAdvance: true,
     choices: [{ label: "Love" }, { label: "Freedom" }, { label: "Sacrifice" }]
   },
   
   {
     type: "choice",
-    text: "What do Veritanian citizens go to school for?",
-    choices: [{ label: "To encounter the public." },  { label: "To be away from family." }]
+    text: "WHAT DO VERITANIAN CITIZENS GO TO SCHOOL FOR?",
+    clickAdvance: true,
+    choices: [{ label: "To encounter the state" },  { label: "To be away from family" }]
   },
   {
     type: "choice",
-    text: "What is the national symbol of Veritania?",
-    choices: [{ label: "The Sun Cross" }, { label: "None" }]
+    text: "WHAT IS THE STATE SYMBOL OF VERITANIA?",
+    clickAdvance: true,
+    choices: [{ label: "The Sun Cross" }, { label: "The Red Square" }]
   },
   {
     type: "choice",
-    text: "Do you recognize that the state is real?",
+    text: "DO YOU RECOGNIZE THAT THE STATE IS REAL?",
+    clickAdvance: true,
     hoverSwap: { Yes: "correct", No: "wrong" },
     choices: [{ label: "Yes" }, { label: "No" }]
   },
   {
     type: "choice",
-    text: "Do you believe your eyes or our words?",
+    text: "DO YOU BELIEVE IN YOUR EYES OR OUR WORDS?",
+    clickAdvance: true,
     hoverSwap: { Yes: "wrong", No: "correct" },
     choices: [{ label: "My eyes" }, { label: "Your words" }]
   },
   {
     type: "choice",
     text: "南蛮人ですか。",
+    clickAdvance: true,
     choices: [{ label: "Yes" }, { label: "No" }]
   },
   {
     type: "choice",
-    text: "Do you want to choose.",
+    text: "DO YOU WANT TO CHOOSE?",
     choices: [{ label: "No" }, { label: "No" }]
   },
   {
     type: "choice",
-    text: "Terror or virtue?",
+    text: "TERROR OR VIRTUE?",
     choices: [{ label: "Yes." }]
   },
   {
     type: "choice",
-    text: "Surrender your private life to the public.",
+    text: "SURRENDER YOUR PRIVATE LIFE TO THE PUBLIC.",
     choices: [{ label: "Yes." }]
   },
   {
     type: "choice",
     hoverSwap: { Yes: "Yes.", No: "Yes." },
-    text: "You will enlist.",
+    text: "YOU WILL ENLIST",
     choices: [{ label: "No" }]
   },
   {
     type: "choice",
-    text: "Heads or Tails.",
+    text: "HEADS OR TAILS?",
     randomCorrect: true,
-    choices: [{ label: "Heads" }, { label: "Tails" }]
+    choices: [{ label: "HEADS" }, { label: "TAILS" }]
   },
   {type: "text", text: "Interview complete."
 },
 ];
 
 
-// ==========================
-// DIALOG SYSTEM (OBJECT)
-// ==========================
+// ============================
+// DIALOG SYSTEM
+// ============================
 const DialogSystem = {
   index: 0,
   typing: false,
@@ -333,17 +374,16 @@ this.typeWriter(line.text, () => {
 
       if (line.type === "input") this.showInput(line);
    if (line.type === "text") 
-      // nothing to show, just allow clicking through
       nextBtn.classList.remove("hidden");
     });
   },
 
   next() {
     if (this.waitingForChoice) return;
-    if (this.typing) {
-      this.typingCancel = true;
+    /* if (this.typing) {
+      this.typingCancel = true; // Typing cancel flag
       return;
-    }
+    } */
     this.index++;
     if (this.index < dialogLines.length) this.playLine(this.index);
     else this.end();
@@ -380,10 +420,13 @@ if (line.randomCorrect) {
 
       btn.onclick = () => {
         ScoreSystem.totalScore += ScoreSystem.stopTimer();
-        Storage.save({
-          ...interviewData,
-          score: ScoreSystem.totalScore
-        });
+        if (!interviewComplete) {
+          Storage.save({
+            ...interviewData,
+            score: ScoreSystem.totalScore
+          });
+        }
+        
 
         if (line.randomCorrect) {
   if (btn.textContent !== correctAnswer) {
@@ -399,7 +442,6 @@ return;
         this.waitingForChoice = false;
 
 if (PERSIST_DIALOG_HISTORY) {
-  // lock all buttons
   Array.from(choiceContainer.children).forEach(b => {
     b.disabled = true;
     b.style.opacity = "0.6";
@@ -429,26 +471,26 @@ this.next();
 
     const submit = () => {
       if (!inputField.value.trim()) return;
-
+    
       interviewData[line.key] = inputField.value.trim();
       ScoreSystem.totalScore += ScoreSystem.stopTimer();
-
+    
       Storage.save({
         ...interviewData,
         score: ScoreSystem.totalScore
       });
-
+    
       this.waitingForChoice = false;
-
-if (PERSIST_DIALOG_HISTORY) {
-  this.appendLine(`_ ${inputField.value}`);
-} else {
-  inputContainer.classList.add("hidden");
-}
-
-this.next();
-
+    
+      if (PERSIST_DIALOG_HISTORY) {
+        this.appendLine(`_ ${inputField.value}`);
+      } else {
+        inputContainer.classList.add("hidden");
+      }
+    
+      this.next();
     };
+    
 
     inputSubmit.onclick = submit;
     inputField.onkeydown = (e) => {
@@ -464,31 +506,38 @@ this.next();
 };
 
 
-
-// ==========================
-// Controls
-// ==========================
 nextBtn.onclick = () => DialogSystem.next();
 
 document.getElementById("dialog-box").onclick = (e) => {
+  if (DialogSystem.typing) return;
   if (e.target.closest("button")) return;
   DialogSystem.next();
 };
 
 
-// ==========================
-// Navigation (SceneManager swap only)
-// ==========================
+
+// ==============================
+// NAVIGATION
+// ==============================
 document.addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-next]");
   if (!btn) return;
 
   const nextId = btn.dataset.next;
   SceneManager.switch(nextId).then(() => {
-  if (nextId === "S1-scene") {
-    dialogIndex = 0;
-    playLine(dialogIndex);
-  }
+  DialogSystem.start();
+
+  if (!hymnSceneActive) {
+  montage.stop();
+}
+
+activeScene = nextId;
+
+idCardActive = nextId === "final-scene";
+hymnSceneActive = nextId === "S2-scene";
+
+
+
 
   if (nextId === "final-scene") {
   const loader = document.getElementById("id-loading");
@@ -499,11 +548,12 @@ document.addEventListener("click", (e) => {
   card.style.display = "none";
 
   setTimeout(() => {
+    if (activeScene !== "final-scene") return;
     loader.classList.add("hidden");
     bus.classList.remove("hidden");
     card.style.display = "block";
     enableTilt();
-  }, 5000);
+  }, 1000); // Load Time: 1000000 = ~16 min
 }
 
 });
@@ -511,9 +561,6 @@ document.addEventListener("click", (e) => {
 });
 
 
-// ==========================
-// Init
-// ==========================
 (function init() {
   ScoreSystem.init();
   document.querySelectorAll(".scene").forEach((s) =>
@@ -522,25 +569,21 @@ document.addEventListener("click", (e) => {
   document.getElementById("intro-scene").classList.add("active");
 })();
 
-// ==========================
-// HYMN SCENE
-// ==========================
+// ====================
+// STAGE2
+// ====================
 const hymnAudio = document.getElementById("hymn-audio");
 const hymnPlayBtn = document.getElementById("hymn-play-btn");
-const MONTAGE_DELAY = 1110; // milliseconds (adjust freely)
 const hymnContinueBtn = document.getElementById("S2-proceed-btn");
 
 if (hymnAudio && hymnPlayBtn && hymnContinueBtn) {
   hymnPlayBtn.onclick = () => {
   hymnPlayBtn.classList.add("hidden");
   hymnAudio.play();
+  hymnAudio.onpause = () => montage.stop();
+  hymnAudio.onplay = () => montage.resume();
   montage.start();
     
-};
-
-hymnAudio.onended = () => {
-  montage.stop();
-  hymnContinueBtn.classList.remove("hidden");
 };
 
 }
@@ -549,13 +592,11 @@ const progressContainer = document.getElementById("hymn-progress-container");
 const progressBar = document.getElementById("hymn-progress-bar");
 
 if (hymnAudio && progressBar) {
-  // Update bar continuously
   hymnAudio.addEventListener("timeupdate", () => {
     const percent = (hymnAudio.currentTime / hymnAudio.duration) * 100;
     progressBar.style.width = percent + "%";
   });
 
-  // Reset bar when audio ends
   hymnAudio.addEventListener("ended", () => {
     progressBar.style.width = "0%";
   });
@@ -568,34 +609,57 @@ const montage = {
   interval: null,
 
   start() {
-  montageContainer.classList.remove("hidden");
-  if (!this.images.length) return;
-
-  // show first image immediately
-  this.index = 0;
-  this.images[this.index].classList.add("active");
-
-  const FIRST_RUN_COUNT = 4;
-  const TOTAL_IMAGES = this.images.length;
-  const IMAGE_DURATION = 11310 / hymnSpeedMultiplier;
-
-  this.interval = setInterval(() => {
-    const current = this.images[this.index];
-    current.classList.remove("active");
-
-    // determine next index
-    if (this.index < FIRST_RUN_COUNT - 1) {
-      // still in first-run, just increment
-      this.index++;
-    } else {
-      // loop images starting from index 4
-      this.index = FIRST_RUN_COUNT + ((this.index - FIRST_RUN_COUNT + 1) % (TOTAL_IMAGES - FIRST_RUN_COUNT));
+    montageContainer.classList.remove("hidden");
+    if (!this.images.length) return;
+  
+    // Only reset index if montage hasn't started yet
+    if (this.index === 0 && !this.interval) {
+      this.images.forEach(img => img.classList.remove("active"));
+      this.images[this.index].classList.add("active");
     }
-
-    const next = this.images[this.index];
-    next.classList.add("active");
-  }, IMAGE_DURATION);
-}
+  
+    const FIRST_RUN_COUNT = 4;
+    const TOTAL_IMAGES = this.images.length;
+    const IMAGE_DURATION = 11330 / hymnSpeedMultiplier;
+  
+    this.interval = setInterval(() => {
+      const current = this.images[this.index];
+      current.classList.remove("active");
+  
+      if (this.index < FIRST_RUN_COUNT - 1) {
+        this.index++;
+      } else {
+        this.index = FIRST_RUN_COUNT + ((this.index - FIRST_RUN_COUNT + 1) % (TOTAL_IMAGES - FIRST_RUN_COUNT));
+      }
+  
+      const next = this.images[this.index];
+      next.classList.add("active");
+    }, IMAGE_DURATION);
+  },
+  
+  resume() {
+    if (!this.images.length) return;
+    if (this.interval) return; // already running
+  
+    const TOTAL_IMAGES = this.images.length;
+    const FIRST_RUN_COUNT = 4;
+    const IMAGE_DURATION = 11330 / hymnSpeedMultiplier;
+  
+    this.interval = setInterval(() => {
+      const current = this.images[this.index];
+      current.classList.remove("active");
+  
+      if (this.index < FIRST_RUN_COUNT - 1) {
+        this.index++;
+      } else {
+        this.index = FIRST_RUN_COUNT + ((this.index - FIRST_RUN_COUNT + 1) % (TOTAL_IMAGES - FIRST_RUN_COUNT));
+      }
+  
+      const next = this.images[this.index];
+      next.classList.add("active");
+    }, IMAGE_DURATION);
+  }
+  
 ,
 
   stop() {
@@ -622,7 +686,6 @@ if (speedSlider) {
       hymnAudio.playbackRate = hymnSpeedMultiplier;
     }
 
-    // Restart montage with new speed if running
     if (montage.interval) {
       montage.stop();
       montage.start();
@@ -643,7 +706,6 @@ hymnAudio.onended = () => {
   montage.stop();
   hymnContinueBtn.classList.remove("hidden");
   hymnFinished = true;
-  montageContainer.classList.add("clickable");
 };
 
 montageContainer.addEventListener("click", () => {
@@ -653,9 +715,9 @@ montageContainer.addEventListener("click", () => {
 
 
 
-// ==========================
-// STAGE 3 — IMAGE SELECTION
-// ==========================
+// ====================
+// STAGE3
+// ====================
 let chosenImage = null;
 const grid = document.getElementById("image-grid");
 const images = grid ? Array.from(grid.querySelectorAll("img")) : [];
@@ -676,9 +738,6 @@ images.forEach((img) => {
   };
 });
 
-// ==========================
-// STAGE 3 — CENTER TITLE HOVER
-// ==========================
 const centerText = document.getElementById("S3-center-text");
 
 images.forEach((img) => {
@@ -695,22 +754,22 @@ images.forEach((img) => {
 });
 
 
-// ==========================
-// FINAL STAGE
-// ==========================
+// =========================
+// FINAL SCENE
+// =========================
 if (continueBtn) {
   continueBtn.onclick = () => {
+    if (!chosenImage) return;
+
     const finalImageEl = document.getElementById("final-image");
     const altImageEl = document.querySelector(".img-b");
 
-    const url = new URL(chosenImage);
-    const normalizedChosen = "." + decodeURIComponent(url.pathname);
+    finalImageEl.src = chosenImage;
 
-    finalImageEl.src = normalizedChosen;
+    const fileName = chosenImage.split("/").pop();
+    const resolvedAltImage = ALT_IMAGE_MAP[fileName] || "";
 
-    let resolvedAltImage = null;
-    if (ALT_IMAGE_MAP[normalizedChosen]) {
-      resolvedAltImage = ALT_IMAGE_MAP[normalizedChosen];
+    if (resolvedAltImage) {
       altImageEl.src = resolvedAltImage;
     }
 
@@ -725,16 +784,17 @@ if (continueBtn) {
     Storage.save({
       ...interviewData,
       score: ScoreSystem.totalScore,
-      chosenImage: normalizedChosen,
+      chosenImage: chosenImage,
       altImage: resolvedAltImage
     });
   };
 }
 
 
-// ==========================
-// EFFECT TOGGLES (OVERLAY-BASED)
-// ==========================
+
+// =====================
+// DEBUG
+// =====================
 document
   .querySelectorAll('#controls input[data-toggle]')
   .forEach((input) => {
@@ -745,50 +805,12 @@ document
 
     if (!effectEl) return;
 
-    // initial state
     effectEl.style.display = input.checked ? "block" : "none";
 
-    // toggle on change
     input.addEventListener("change", () => {
       effectEl.style.display = input.checked ? "block" : "none";
     });
   });
-
-
-  // ==========================
-// MOVING EYES
-// ==========================
-
-        const eyes = document.querySelectorAll(".eye");
-      const MAX_OFFSET = 3;
-
-      document.addEventListener("mousemove", (e) => {
-        eyes.forEach((eye) => {
-          const pupil = eye.querySelector(".pupil");
-          const rect = eye.getBoundingClientRect();
-
-          const cx = rect.left + rect.width / 2;
-          const cy = rect.top + rect.height / 2;
-
-          const dx = e.clientX - cx;
-          const dy = e.clientY - cy;
-
-          const angle = Math.atan2(dy, dx);
-          const distance = Math.min(MAX_OFFSET, Math.hypot(dx, dy) / 12);
-
-          const x = Math.cos(angle) * distance;
-          const y = Math.sin(angle) * distance;
-
-          pupil.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
-        });
-      });
-
-
-      const serialEl = document.getElementById("serial-value");
-if (serialEl) {
-  serialEl.textContent =
-    "S-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-}
 
 
 })();
